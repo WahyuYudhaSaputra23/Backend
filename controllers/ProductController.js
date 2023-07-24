@@ -31,49 +31,47 @@ export const getProductById = async (req, res) => {
     }
   };
 
-// saveProduct: Menyimpan produk baru ke database. Mengelola proses upload gambar, 
-// memeriksa validasi file gambar, dan menyimpan informasi produk ke dalam database.
-
-export const saveProduct = (req, res) => {
-  if (!req.files || !req.files.file) {
-    return res.status(400).json({ msg: "No File Uploaded" });
-  }
-
-  const name = req.body.title;
-  const file = req.files.file;
-  const fileSize = file.data.length;
-  const ext = path.extname(file.name);
-  const fileName = `${file.md5}${ext}`;
-  const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
-  const allowedType = [".png", ".jpg", ".jpeg"];
-
-  if (!allowedType.includes(ext.toLowerCase())) {
-    return res.status(422).json({ msg: "Invalid Images" });
-  }
-
-  if (fileSize > 5000000) {
-    return res.status(422).json({ msg: "Image must be less than 5 MB" });
-  }
-
-  file.mv(`./public/images/${fileName}`, async (err) => {
-    if (err) {
-      return res.status(500).json({ msg: err.message });
+  export const saveProduct = (req, res) => {
+    if (!req.files || !req.files.file) {
+      return res.status(400).json({ msg: "No File Uploaded" });
     }
-
-    try {
-      const newProduct = new Product({
-        name: name,
-        image: fileName,
-        url: url,
-      });
-      await newProduct.save();
-      res.status(201).json({ msg: "Product Created Successfully" });
-    } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ msg: "Internal server error" });
+  
+    const name = req.body.title;
+    const file = req.files.file;
+    const fileSize = file.data.length;
+    const ext = path.extname(file.name);
+    const fileName = `${Date.now()}${ext}`; // Use timestamp to generate a unique filename
+    const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+    const allowedType = [".png", ".jpg", ".jpeg"];
+  
+    if (!allowedType.includes(ext.toLowerCase())) {
+      return res.status(422).json({ msg: "Invalid Images" });
     }
-  });
-};
+  
+    if (fileSize > 5000000) {
+      return res.status(422).json({ msg: "Image must be less than 5 MB" });
+    }
+  
+    file.mv(`./public/images/${fileName}`, async (err) => {
+      if (err) {
+        return res.status(500).json({ msg: err.message });
+      }
+  
+      try {
+        const newProduct = new Product({
+          name: name,
+          image: fileName,
+          url: url,
+        });
+  
+        await newProduct.save(); // Assuming ProductModel.js is a mongoose model
+        res.status(201).json({ msg: "Product Created Successfully" });
+      } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ msg: "Internal server error" });
+      }
+    });
+  };
 
 // updateProduct: Memperbarui produk berdasarkan ID yang diberikan. Mengelola proses upload gambar, 
 // memeriksa validasi file gambar, dan memperbarui informasi produk di dalam database.
