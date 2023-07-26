@@ -15,10 +15,19 @@ import {
 
 const router = express.Router();
 
+// GET all products
 router.get('/products', getProducts);
+
+// GET product by ID
 router.get('/products/:id', getProductById);
+
+// POST create a new product
 router.post('/products', saveProduct);
-router.patch('/products/:id', updateProduct);
+
+// PUT update a product by ID
+router.put('/products/:id', updateProduct);
+
+// DELETE product by ID
 router.delete('/products/:id', deleteProduct);
 
 export default router;
