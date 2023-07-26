@@ -116,7 +116,7 @@ export const updateProduct = async (req, res) => {
   
       await Product.findByIdAndUpdate(
         productId,
-        { name: name, image: fileName, url: url },
+        { title: name, image: fileName, url: url },
         { new: true }
       );
   
