@@ -60,7 +60,7 @@ export const getProductById = async (req, res) => {
   
       try {
         const newProduct = new Product({
-          name: name,
+          title: name,
           image: fileName,
           url: url,
         });
