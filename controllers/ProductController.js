@@ -41,8 +41,8 @@ export const getProductById = async (req, res) => {
     const fileSize = file.data.length;
     const ext = path.extname(file.name);
     const fileName = `${Date.now()}${ext}`; // Use timestamp to generate a unique filename
-    // const url = `https://backend-id17.vercel.app/images/${fileName}`;
-    const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+    const url = `https://backend-id17.vercel.app/images/${fileName}`;
+    // const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
     const allowedType = [".png", ".jpg", ".jpeg"];
   
     if (!allowedType.includes(ext.toLowerCase())) {
